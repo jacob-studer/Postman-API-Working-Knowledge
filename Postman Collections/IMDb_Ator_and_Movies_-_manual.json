@@ -1,0 +1,265 @@
+{
+	"info": {
+		"_postman_id": "89473f29-8c4c-49dd-b216-132a8598628b",
+		"name": "Under Construction - IMDb Actor and Movies - manual",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "List most popular celebs",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "42a2bf05-88e6-4dc3-95b6-62fd6334db16",
+						"exec": [
+							"const response = pm.response.json();\r",
+							"\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response is valid\", () => {\r",
+							"    pm.expect(response).to.exist;\r",
+							"    pm.expect(response).to.be.an(\"array\");\r",
+							"    pm.expect(response[0]).to.include(\"/name/\");\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"id": "52d05207-0db1-412e-a2a3-694bbdf5ed8a",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "{{imdbKeyHeader}}",
+						"value": "{{imdbApiKey}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://imdb8.p.rapidapi.com/actors/list-most-popular-celebs?homeCountry=US",
+					"protocol": "https",
+					"host": [
+						"imdb8",
+						"p",
+						"rapidapi",
+						"com"
+					],
+					"path": [
+						"actors",
+						"list-most-popular-celebs"
+					],
+					"query": [
+						{
+							"key": "homeCountry",
+							"value": "US"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Search title by incomplete string (auto complete)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "2843a9f3-e75f-4903-9f62-727bcf8e7985",
+						"exec": [
+							"const response = pm.response.json();\r",
+							"\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response is valid\", () => {\r",
+							"    pm.expect(response).to.exist;\r",
+							"    pm.expect(response).to.be.an(\"object\");\r",
+							"    pm.expect(response.results[0].id).to.include(\"/title/\");\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"id": "0d27208b-c4f9-4829-a237-e9cbefae47f8",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "{{imdbKeyHeader}}",
+						"value": "{{imdbApiKey}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://imdb8.p.rapidapi.com/title/find?q=avengers end g",
+					"protocol": "https",
+					"host": [
+						"imdb8",
+						"p",
+						"rapidapi",
+						"com"
+					],
+					"path": [
+						"title",
+						"find"
+					],
+					"query": [
+						{
+							"key": "q",
+							"value": "avengers end g"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Retrieve actor bio",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "9b5377bf-ecdf-4806-9bec-1a1fe7751ded",
+						"exec": [
+							"const response = pm.response.json();\r",
+							"\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response is valid\", () => {\r",
+							"    pm.expect(response).to.exist;\r",
+							"    pm.expect(response).to.be.an(\"object\");\r",
+							"    pm.expect(response.id).to.include();\r",
+							"});\r",
+							"\r",
+							"//dynamically select from array?\r",
+							"pm.test(\"Mini Bio is correct language\", () => {\r",
+							"    pm.expect(response.miniBios[0].language).to.eql(\"en\")\r",
+							"});\r",
+							"\r",
+							"// pm.test(\"Mini Bio is correct language\", () => {\r",
+							"//     pm.expect(response.miniBios.find(language => language === 'en').to.eql(\"en\")\r",
+							"// })"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"id": "daf29140-6f70-4653-bdd9-d8c16d5bbbdc",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "{{imdbKeyHeader}}",
+						"value": "{{imdbApiKey}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://imdb8.p.rapidapi.com/actors/get-bio?nconst=nm0193846",
+					"protocol": "https",
+					"host": [
+						"imdb8",
+						"p",
+						"rapidapi",
+						"com"
+					],
+					"path": [
+						"actors",
+						"get-bio"
+					],
+					"query": [
+						{
+							"key": "nconst",
+							"value": "nm0193846"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Retrieve overview for title",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "6ba92617-1143-4f9b-80fe-b42801b9e561",
+						"exec": [
+							"const response = pm.response.json();\r",
+							"\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response is valid\", () => {\r",
+							"    pm.expect(response).to.exist;\r",
+							"    pm.expect(response).to.be.an(\"object\");\r",
+							"    pm.expect(response.id).to.include(\"tt9511690\");\r",
+							"});\r",
+							"\r",
+							"//dynamically select from array?\r",
+							"pm.test(\"Correct release date\", () => {\r",
+							"    pm.expect(response.releaseDate).to.eql(\"2018-12-28\")\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"id": "61c91267-b034-4474-892a-d2c6725dfdd6",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "{{imdbKeyHeader}}",
+						"value": "{{imdbApiKey}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://imdb8.p.rapidapi.com/title/get-overview-details?tconst=tt9511690",
+					"protocol": "https",
+					"host": [
+						"imdb8",
+						"p",
+						"rapidapi",
+						"com"
+					],
+					"path": [
+						"title",
+						"get-overview-details"
+					],
+					"query": [
+						{
+							"key": "tconst",
+							"value": "tt9511690"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
