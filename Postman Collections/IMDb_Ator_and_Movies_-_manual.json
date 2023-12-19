@@ -151,14 +151,18 @@
 							"    pm.expect(response.id).to.include();\r",
 							"});\r",
 							"\r",
-							"//dynamically select from array?\r",
 							"pm.test(\"Mini Bio is correct language\", () => {\r",
 							"    pm.expect(response.miniBios[0].language).to.eql(\"en\")\r",
 							"});\r",
 							"\r",
 							"// pm.test(\"Mini Bio is correct language\", () => {\r",
 							"//     pm.expect(response.miniBios.find(language => language === 'en').to.eql(\"en\")\r",
-							"// })"
+							"// })\r",
+							"\r",
+							"//dynamically select from array?\r",
+							"// pm.test(\"Mini Bio is correct language\", () => {\r",
+							"//     pm.expect(response.miniBios[0].language).to.eql(\"en\")\r",
+							"// });"
 						],
 						"type": "text/javascript"
 					}
