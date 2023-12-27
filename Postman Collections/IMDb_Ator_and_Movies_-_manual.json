@@ -268,6 +268,44 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "https://api.postman.com/collections/29150279-b63bb30b-0c67-488e-a1e4-64ccfee4bf76",
+			"id": "4fb70f3c-5255-4443-bad5-755ce7328731",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "apikey",
+						"value": "",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"url": {
+					"raw": "https://api.postman.com/collections/29150279-b63bb30b-0c67-488e-a1e4-64ccfee4bf76?apikey=PMAK-654d122c4136a5003e9aaa9b-022c98aab16b8d65e02b6c6741cae43d5e",
+					"protocol": "https",
+					"host": [
+						"api",
+						"postman",
+						"com"
+					],
+					"path": [
+						"collections",
+						"29150279-b63bb30b-0c67-488e-a1e4-64ccfee4bf76"
+					],
+					"query": [
+						{
+							"key": "apikey",
+							"value": "PMAK-654d122c4136a5003e9aaa9b-022c98aab16b8d65e02b6c6741cae43d5e"
+						}
+					]
+				}
+			},
+			"response": []
 		}
 	]
 }
