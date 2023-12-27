@@ -300,7 +300,8 @@
 					"query": [
 						{
 							"key": "apikey",
-							"value": "PMAK-654d122c4136a5003e9aaa9b-022c98aab16b8d65e02b6c6741cae43d5e"
+							"value": "PMAK-654d122c4136a5003e9aaa9b-022c98aab16b8d65e02b6c6741cae43d5e",
+							"type": "text"
 						}
 					]
 				}
