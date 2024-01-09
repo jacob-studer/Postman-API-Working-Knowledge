@@ -1,0 +1,958 @@
+{
+	"info": {
+		"_postman_id": "a4e2a8da-4517-487e-aba8-a06c128008f0",
+		"name": "Smart Meal, Meal Planning Automated Regression Test",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get meal search",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "d80e6567-2660-4487-b87b-bd5d514d3f01",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "013f6fff-5a7c-4687-acbb-5afc2b30d981",
+						"exec": [
+							"const response = pm.response.json();\r",
+							"\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response time is less than 1500ms\", function () {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(1500);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response has valid results\", function () {\r",
+							"    pm.expect(response).to.be.an('object');\r",
+							"    pm.expect(response.results[0].id).to.be.a('number');\r",
+							"    pm.expect(response).to.have.property(\"results\");\r",
+							"});\r",
+							"\r",
+							"const individualMealId = response.results[0].id;\r",
+							"\r",
+							"pm.environment.set('individualMealId', individualMealId);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"id": "b8474a03-9203-4b3b-a161-5301aab7672f",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://api.spoonacular.com/recipes/complexSearch?apiKey={{spoonacularApiKey}}&query=pasta&cuisine=italian&diet=vegetarian",
+					"protocol": "https",
+					"host": [
+						"api",
+						"spoonacular",
+						"com"
+					],
+					"path": [
+						"recipes",
+						"complexSearch"
+					],
+					"query": [
+						{
+							"key": "apiKey",
+							"value": "{{spoonacularApiKey}}"
+						},
+						{
+							"key": "query",
+							"value": "pasta"
+						},
+						{
+							"key": "cuisine",
+							"value": "italian"
+						},
+						{
+							"key": "diet",
+							"value": "vegetarian"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get individual meal",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "d80e6567-2660-4487-b87b-bd5d514d3f01",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "e2c81906-f5e5-46fa-b142-f68a7c9752b4",
+						"exec": [
+							"const response = pm.response.json();\r",
+							"\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response time is less than 1500ms\", function () {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(1500);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response has valid results\", function () {\r",
+							"    pm.expect(response).to.be.an('object');\r",
+							"    pm.expect(response).to.have.property('title');\r",
+							"    pm.expect(response.servings).to.be.above(0);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Contains a spoonacular score\", function () {\r",
+							"    pm.expect(response.spoonacularScore).to.exist;\r",
+							"    pm.expect(response.spoonacularScore).to.be.a('number');\r",
+							"})\r",
+							"\r",
+							"const individualMealTitle = response.title;\r",
+							"const individualMealServings = response.servings;\r",
+							"const individualMealImageType = response.imageType;\r",
+							"\r",
+							"pm.environment.set('individualMealTitle', individualMealTitle);\r",
+							"pm.environment.set('individualMealServings', individualMealServings);\r",
+							"pm.environment.set('individualMealImageType', individualMealImageType);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"id": "60040106-0418-4fdc-b71d-8103ce529f56",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://api.spoonacular.com/recipes/{{individualMealId}}/information?apiKey={{spoonacularApiKey}}",
+					"protocol": "https",
+					"host": [
+						"api",
+						"spoonacular",
+						"com"
+					],
+					"path": [
+						"recipes",
+						"{{individualMealId}}",
+						"information"
+					],
+					"query": [
+						{
+							"key": "apiKey",
+							"value": "{{spoonacularApiKey}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get public meal plan templates",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "d80e6567-2660-4487-b87b-bd5d514d3f01",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "7cb2c6d6-80d1-420c-8e2e-21aa60160204",
+						"exec": [
+							"const response = pm.response.json();\r",
+							"\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response time is less than 1500ms\", function () {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(1500);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response has valid results\", function () {\r",
+							"    pm.expect(response).to.be.an('object');\r",
+							"    pm.expect(response).to.have.property('templates');\r",
+							"    pm.expect(response.templates).to.be.an('array');\r",
+							"    pm.expect(response.templates).length.to.be.above(100);\r",
+							"});\r",
+							"\r",
+							"const individualTemplateId = response.templates[0].id;\r",
+							"\r",
+							"pm.environment.set('individualTemplateId', individualTemplateId);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"id": "98b733ae-6dba-4ebc-9888-8eb88176094b",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://api.spoonacular.com/mealplanner/public-templates?apiKey={{spoonacularApiKey}}",
+					"protocol": "https",
+					"host": [
+						"api",
+						"spoonacular",
+						"com"
+					],
+					"path": [
+						"mealplanner",
+						"public-templates"
+					],
+					"query": [
+						{
+							"key": "apiKey",
+							"value": "{{spoonacularApiKey}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get meal plan template",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "b2eaaf5b-edd6-4e93-9b00-43a7bd965ed1",
+						"exec": [
+							"const response = pm.response.json();\r",
+							"\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response time is less than 1500ms\", function () {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(1500);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response has valid results\", function () {\r",
+							"    pm.expect(response).to.be.an('object');\r",
+							"    pm.expect(response).to.have.property('name');\r",
+							"    pm.expect(response.days[0]).to.have.property('nutritionSummary');\r",
+							"});\r",
+							"\r",
+							"console.log(response)\r",
+							"\r",
+							"pm.environment.set('individualMealTemplateData_Id', response.id)\r",
+							"pm.environment.set('individualMealTemplateData_Name', response.name)\r",
+							"pm.environment.set('individualMealTemplateData_Days', JSON.stringify(response.days))"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"id": "f04159b4-1a2f-4988-a971-279ae59c4629",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://api.spoonacular.com/mealplanner/jstuder/templates/{{individualTemplateId}}?apiKey={{spoonacularApiKey}}&username={{spoonacularUsername}}&hash={{spoonacularHash}}&id={{individualTemplateId}}",
+					"protocol": "https",
+					"host": [
+						"api",
+						"spoonacular",
+						"com"
+					],
+					"path": [
+						"mealplanner",
+						"jstuder",
+						"templates",
+						"{{individualTemplateId}}"
+					],
+					"query": [
+						{
+							"key": "apiKey",
+							"value": "{{spoonacularApiKey}}"
+						},
+						{
+							"key": "username",
+							"value": "{{spoonacularUsername}}"
+						},
+						{
+							"key": "hash",
+							"value": "{{spoonacularHash}}"
+						},
+						{
+							"key": "id",
+							"value": "{{individualTemplateId}}",
+							"description": " "
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Generate meal plan \"with these\"",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "731119be-f024-4ab0-971a-1ac8198e2c92",
+						"exec": [
+							"const response = pm.response.json();\r",
+							"\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response time is less than 1500ms\", function () {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(1500);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response has valid results\", function () {\r",
+							"    pm.expect(response).to.be.an('object');\r",
+							"    pm.expect(response).to.have.property('week');\r",
+							"    pm.expect(response.week.monday.meals[0].id).to.be.a('number');\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"id": "816ad603-7469-4aef-8603-188570069e84",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://api.spoonacular.com/mealplanner/generate?timeFrame=week&targetCalories=3000&apiKey={{spoonacularApiKey}}",
+					"protocol": "https",
+					"host": [
+						"api",
+						"spoonacular",
+						"com"
+					],
+					"path": [
+						"mealplanner",
+						"generate"
+					],
+					"query": [
+						{
+							"key": "timeFrame",
+							"value": "week"
+						},
+						{
+							"key": "targetCalories",
+							"value": "3000"
+						},
+						{
+							"key": "diet",
+							"value": "Whole30",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "apiKey",
+							"value": "{{spoonacularApiKey}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add meal to meal plan",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "5b5f1703-ade2-4c28-90d7-4e747950a653",
+						"exec": [
+							"const response = pm.response.json();\r",
+							"\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response time is less than 1500ms\", function () {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(1500);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Meal successfully added\", function () {\r",
+							"    pm.expect(response.status).to.eql('success')\r",
+							"    pm.expect(response.id).to.be.a('number')\r",
+							"});\r",
+							"\r",
+							"pm.environment.set('plannedMealId', response.id)\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "f347ecc3-4a23-459c-869c-fe4c19d014c7",
+						"exec": [
+							"let currentTimeStamp = Date.now();\r",
+							"\r",
+							"pm.environment.set('currentTimeStamp', currentTimeStamp);\r",
+							"\r",
+							"const currentSpoonacularTimeStamp = currentTimeStamp.toString().slice(0, -3);\r",
+							"\r",
+							"pm.environment.set('currentSpoonacularTimeStamp', currentSpoonacularTimeStamp);\r",
+							"\r",
+							"console.log(currentSpoonacularTimeStamp);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"id": "e2b74fcc-0388-431f-b365-7c38369e167d",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"date\": {{currentSpoonacularTimeStamp}},\r\n    \"slot\": 1,\r\n    \"position\": 0,\r\n    \"type\": \"RECIPE\",\r\n    \"value\": {\r\n        \"id\": {{individualMealId}},\r\n        \"servings\": {{individualMealServings}},\r\n        \"title\": \"{{individualMealTitle}}\",\r\n        \"imageType\": \"{{individualMealImageType}}\"\r\n    }\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://api.spoonacular.com/mealplanner/jstuder/items?apiKey={{spoonacularApiKey}}&hash={{spoonacularHash}}",
+					"protocol": "https",
+					"host": [
+						"api",
+						"spoonacular",
+						"com"
+					],
+					"path": [
+						"mealplanner",
+						"jstuder",
+						"items"
+					],
+					"query": [
+						{
+							"key": "apiKey",
+							"value": "{{spoonacularApiKey}}"
+						},
+						{
+							"key": "hash",
+							"value": "{{spoonacularHash}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get user meal plan by day",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "14b1e38d-f33e-4587-b5df-cc7d5dfa6302",
+						"exec": [
+							"function convertTimestamptoTime() {\r",
+							"let unixTimestamp = pm.environment.get('currentTimeStamp');\r",
+							"let date = new Date(unixTimestamp)\r",
+							"\r",
+							"let day = date.toLocaleDateString('en-US').replaceAll('/', '-').substring(0,3)\r",
+							"let year = date.toLocaleDateString('en-US').replaceAll('/', '-').substring(4,8)\r",
+							"const newDate = year + '-' + day\r",
+							"console.log(newDate)\r",
+							"\r",
+							"pm.environment.set('mealPlanDay', newDate)\r",
+							"};\r",
+							"\r",
+							"convertTimestamptoTime()\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "d34324f1-26d5-459b-b457-a64b8c6daa4d",
+						"exec": [
+							"const response = pm.response.json();\r",
+							"const plannedMealId = pm.environment.get('plannedMealId');\r",
+							"\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response time is less than 1500ms\", function () {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(1500);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response has valid results\", function () {\r",
+							"    pm.expect(response).to.be.an('object');\r",
+							"    pm.expect(response).to.have.property('nutritionSummary');\r",
+							"    pm.expect(response.items[0].id).to.have.eql(plannedMealId);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"id": "27d49b1b-46cb-4949-971b-cc9c29168ba8",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://api.spoonacular.com/mealplanner/jstuder/day/{{mealPlanDay}}?apiKey={{spoonacularApiKey}}&hash={{spoonacularHash}}",
+					"protocol": "https",
+					"host": [
+						"api",
+						"spoonacular",
+						"com"
+					],
+					"path": [
+						"mealplanner",
+						"jstuder",
+						"day",
+						"{{mealPlanDay}}"
+					],
+					"query": [
+						{
+							"key": "apiKey",
+							"value": "{{spoonacularApiKey}}"
+						},
+						{
+							"key": "hash",
+							"value": "{{spoonacularHash}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add meal plan template",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "2a617d8f-5da8-41f6-b14e-232878ffb4bb",
+						"exec": [
+							"const response = pm.response.json();\r",
+							"\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response time is less than 1500ms\", function () {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(1500);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Template successfully added\", function () {\r",
+							"    pm.expect(response.status).to.eql('success')\r",
+							"    pm.expect(response.mealPlan.id).to.be.a('number')\r",
+							"});\r",
+							"\r",
+							"pm.environment.set('plannedTemplateId', response.mealPlan.id)"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "d3d711d2-db6a-4a31-8468-368a019814d3",
+						"exec": [
+							"console.log()"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"id": "64bb5afd-3d92-4f91-b880-61f3eeef8418",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\": {{individualMealTemplateData_Id}},\r\n    \"name\": \"{{individualMealTemplateData_Name}}\",\r\n    \"days\": \"{{individualMealTemplateData_Days}}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://api.spoonacular.com/mealplanner/jstuder/templates?apiKey={{spoonacularApiKey}}&hash={{spoonacularHash}}",
+					"protocol": "https",
+					"host": [
+						"api",
+						"spoonacular",
+						"com"
+					],
+					"path": [
+						"mealplanner",
+						"jstuder",
+						"templates"
+					],
+					"query": [
+						{
+							"key": "apiKey",
+							"value": "{{spoonacularApiKey}}"
+						},
+						{
+							"key": "hash",
+							"value": "{{spoonacularHash}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get users personal templates",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "c895f76b-97a5-487f-a9a6-f0462c52cc10",
+						"exec": [
+							"const response = pm.response.json();\r",
+							"\r",
+							"const plannedTemplateId = pm.environment.get('plannedTemplateId')\r",
+							"\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response time is less than 1500ms\", function () {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(1500);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response has valid results\", function () {\r",
+							"    pm.expect(response).to.be.an('object');\r",
+							"    pm.expect(response).to.have.property('templates');\r",
+							"    pm.expect(response.templates[0].id).to.eql(plannedTemplateId);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "89d32f33-a75c-42f4-8d04-c30b754f1d7c",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"id": "c4ab990d-8d9a-45ab-a8f3-0ed0768374ab",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://api.spoonacular.com/mealplanner/jstuder/templates?apiKey={{spoonacularApiKey}}&username={{spoonacularUsername}}&hash={{spoonacularHash}}",
+					"protocol": "https",
+					"host": [
+						"api",
+						"spoonacular",
+						"com"
+					],
+					"path": [
+						"mealplanner",
+						"jstuder",
+						"templates"
+					],
+					"query": [
+						{
+							"key": "apiKey",
+							"value": "{{spoonacularApiKey}}"
+						},
+						{
+							"key": "username",
+							"value": "{{spoonacularUsername}}"
+						},
+						{
+							"key": "hash",
+							"value": "{{spoonacularHash}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get user meal plan by week",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "cc5b5600-b274-4181-8a6d-699688eb21b2",
+						"exec": [
+							"const response = pm.response.json();\r",
+							"\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response time is less than 1500ms\", function () {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(1500);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response has valid results\", function () {\r",
+							"    pm.expect(response).to.be.an('object');\r",
+							"    pm.expect(response).to.have.property('days');\r",
+							"});\r",
+							"\r",
+							"//pm.environment.set('plannedMealId', response.days[0].items[0].id)"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"id": "28194e05-445c-486b-9e92-1123515f1570",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://api.spoonacular.com/mealplanner/jstuder/week/{{mealPlanDay}}?apiKey={{spoonacularApiKey}}&hash={{spoonacularHash}}",
+					"protocol": "https",
+					"host": [
+						"api",
+						"spoonacular",
+						"com"
+					],
+					"path": [
+						"mealplanner",
+						"jstuder",
+						"week",
+						"{{mealPlanDay}}"
+					],
+					"query": [
+						{
+							"key": "apiKey",
+							"value": "{{spoonacularApiKey}}"
+						},
+						{
+							"key": "hash",
+							"value": "{{spoonacularHash}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete single meal from user plan",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "0611b4ef-0746-491f-88f3-73bdad796bb4",
+						"exec": [
+							"const response = pm.response.json();\r",
+							"\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response time is less than 1500ms\", function () {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(1500);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response has valid results\", function () {\r",
+							"    pm.expect(response).to.be.an('object');\r",
+							"    pm.expect(response.status).to.eql('success')\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"id": "ba4a224e-1094-4116-847b-80ae376b73ad",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://api.spoonacular.com/mealplanner/jstuder/items/{{plannedMealId}}?apiKey={{spoonacularApiKey}}&hash={{spoonacularHash}}",
+					"protocol": "https",
+					"host": [
+						"api",
+						"spoonacular",
+						"com"
+					],
+					"path": [
+						"mealplanner",
+						"jstuder",
+						"items",
+						"{{plannedMealId}}"
+					],
+					"query": [
+						{
+							"key": "apiKey",
+							"value": "{{spoonacularApiKey}}"
+						},
+						{
+							"key": "hash",
+							"value": "{{spoonacularHash}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete meal template from user",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "5c9bfdfd-676b-477b-b6f6-688e68d3bf38",
+						"exec": [
+							"const response = pm.response.json();\r",
+							"\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response time is less than 1500ms\", function () {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(1500);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response has valid results\", function () {\r",
+							"    pm.expect(response).to.be.an('object');\r",
+							"    pm.expect(response.status).to.eql('success')\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"id": "5a3dbda7-f189-41bd-8b59-68ef8f69094e",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://api.spoonacular.com/mealplanner/jstuder/templates/{{plannedTemplateId}}?apiKey={{spoonacularApiKey}}&hash={{spoonacularHash}}",
+					"protocol": "https",
+					"host": [
+						"api",
+						"spoonacular",
+						"com"
+					],
+					"path": [
+						"mealplanner",
+						"jstuder",
+						"templates",
+						"{{plannedTemplateId}}"
+					],
+					"query": [
+						{
+							"key": "apiKey",
+							"value": "{{spoonacularApiKey}}"
+						},
+						{
+							"key": "hash",
+							"value": "{{spoonacularHash}}"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
