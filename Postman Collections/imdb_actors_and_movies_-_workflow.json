@@ -1,0 +1,360 @@
+{
+	"info": {
+		"_postman_id": "b63bb30b-0c67-488e-a1e4-64ccfee4bf76",
+		"name": "IMDb Actors and Movies - workflow",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "List most popular celebs",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "42a2bf05-88e6-4dc3-95b6-62fd6334db16",
+						"exec": [
+							"const response = pm.response.json();\r",
+							"\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response is valid\", () => {\r",
+							"    pm.expect(response).to.exist;\r",
+							"    pm.expect(response).to.be.an(\"array\");\r",
+							"    pm.expect(response[0]).to.include(\"/name/\");\r",
+							"});\r",
+							"\r",
+							"//Way to dynamically select the date/actor?\r",
+							"const newActorString = response[0].replace(\"/name/\", \"\");\r",
+							"const newActorString2 = newActorString.replace(\"/\", \"\");\r",
+							"console.log(newActorString2);\r",
+							"\r",
+							"pm.collectionVariables.set('mostPopularActor', newActorString2);\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"id": "069826f4-e30c-494f-b9f6-a3b1ea19b4ef",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "{{imdbKeyHeader}}",
+						"value": "{{imdbApiKey}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://imdb8.p.rapidapi.com/actors/list-most-popular-celebs?homeCountry=US",
+					"protocol": "https",
+					"host": [
+						"imdb8",
+						"p",
+						"rapidapi",
+						"com"
+					],
+					"path": [
+						"actors",
+						"list-most-popular-celebs"
+					],
+					"query": [
+						{
+							"key": "homeCountry",
+							"value": "US"
+						},
+						{
+							"key": "{{imdbKeyHeader}}",
+							"value": "{{imdbApiKey}}",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Retrieve most popular actor bio",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "9b5377bf-ecdf-4806-9bec-1a1fe7751ded",
+						"exec": [
+							"const response = pm.response.json();\r",
+							"const mostPopularActor = pm.collectionVariables.get('mostPopularActor');\r",
+							"\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response is valid\", () => {\r",
+							"    pm.expect(response).to.exist;\r",
+							"    pm.expect(response).to.be.an(\"object\");\r",
+							"    pm.expect(response.id).to.include(mostPopularActor);\r",
+							"});\r",
+							"\r",
+							"//dynamically select from array?\r",
+							"pm.test(\"Mini Bio is correct language\", () => {\r",
+							"    pm.expect(response.miniBios[0].language).to.eql(\"en\")\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"id": "c3f9203e-8c8a-41a1-a05e-afdfffcc3d6f",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "{{imdbKeyHeader}}",
+						"value": "{{imdbApiKey}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://imdb8.p.rapidapi.com/actors/get-bio?nconst={{mostPopularActor}}",
+					"protocol": "https",
+					"host": [
+						"imdb8",
+						"p",
+						"rapidapi",
+						"com"
+					],
+					"path": [
+						"actors",
+						"get-bio"
+					],
+					"query": [
+						{
+							"key": "nconst",
+							"value": "{{mostPopularActor}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Search title by incomplete string (auto complete)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "2843a9f3-e75f-4903-9f62-727bcf8e7985",
+						"exec": [
+							"const response = pm.response.json();\r",
+							"\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response is valid\", () => {\r",
+							"    pm.expect(response).to.exist;\r",
+							"    pm.expect(response).to.be.an(\"object\");\r",
+							"    pm.expect(response.results[0].id).to.include(\"/title/\");\r",
+							"});\r",
+							"\r",
+							"const titleSearchActorString = response.results[0].principals[0].id.replace(\"/name/\", \"\");\r",
+							"const titleSearchActorString2 = titleSearchActorString.replace(\"/\", \"\");\r",
+							"console.log(titleSearchActorString2);\r",
+							"\r",
+							"const titleSearchTitleString = response.results[0].id.replace(\"/title/\", \"\");\r",
+							"const titleSearchTitleString2 = titleSearchTitleString.replace(\"/\", \"\");\r",
+							"console.log(titleSearchTitleString2);\r",
+							"\r",
+							"pm.collectionVariables.set('titleSearchActor', titleSearchActorString2);\r",
+							"pm.collectionVariables.set('titleSearchTitle', titleSearchTitleString2);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"id": "c36c9c47-311d-432f-9497-5f6f7decbbbb",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "{{imdbKeyHeader}}",
+						"value": "{{imdbApiKey}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://imdb8.p.rapidapi.com/title/find?q=game of thr",
+					"protocol": "https",
+					"host": [
+						"imdb8",
+						"p",
+						"rapidapi",
+						"com"
+					],
+					"path": [
+						"title",
+						"find"
+					],
+					"query": [
+						{
+							"key": "q",
+							"value": "game of thr"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Retrieve an actor bio from title search",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "9b5377bf-ecdf-4806-9bec-1a1fe7751ded",
+						"exec": [
+							"const response = pm.response.json();\r",
+							"const titleSearchActor = pm.collectionVariables.get('titleSearchActor');\r",
+							"\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response is valid\", () => {\r",
+							"    pm.expect(response).to.exist;\r",
+							"    pm.expect(response).to.be.an(\"object\");\r",
+							"    pm.expect(response.id).to.include(titleSearchActor);\r",
+							"});\r",
+							"\r",
+							"//dynamically select from array?\r",
+							"pm.test(\"Mini Bio is correct language\", () => {\r",
+							"    pm.expect(response.miniBios[0].language).to.eql(\"en\")\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"id": "ff1e3149-379f-4346-b549-13914a9a30b1",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "{{imdbKeyHeader}}",
+						"value": "{{imdbApiKey}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://imdb8.p.rapidapi.com/actors/get-bio?nconst={{titleSearchActor}}",
+					"protocol": "https",
+					"host": [
+						"imdb8",
+						"p",
+						"rapidapi",
+						"com"
+					],
+					"path": [
+						"actors",
+						"get-bio"
+					],
+					"query": [
+						{
+							"key": "nconst",
+							"value": "{{titleSearchActor}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Retrieve overview for title from search",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "6ba92617-1143-4f9b-80fe-b42801b9e561",
+						"exec": [
+							"const response = pm.response.json();\r",
+							"const titleSearchTitle = pm.collectionVariables.get('titleSearchTitle');\r",
+							"\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response is valid\", () => {\r",
+							"    pm.expect(response).to.exist;\r",
+							"    pm.expect(response).to.be.an(\"object\");\r",
+							"    pm.expect(response.id).to.include(titleSearchTitle);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"id": "62ef21f2-b53e-40be-ae13-822582b7f85f",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "{{imdbKeyHeader}}",
+						"value": "{{imdbApiKey}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://imdb8.p.rapidapi.com/title/get-overview-details?tconst={{titleSearchTitle}}",
+					"protocol": "https",
+					"host": [
+						"imdb8",
+						"p",
+						"rapidapi",
+						"com"
+					],
+					"path": [
+						"title",
+						"get-overview-details"
+					],
+					"query": [
+						{
+							"key": "tconst",
+							"value": "{{titleSearchTitle}}"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "mostPopularActor",
+			"value": ""
+		},
+		{
+			"key": "titleSearchActor",
+			"value": ""
+		},
+		{
+			"key": "titleSearchTitle",
+			"value": ""
+		}
+	]
+}
